@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_USER=myusername
+      - POSTGRES_DB=hookah
+    restart: on-failure
+  # --------------- SERVICES  ---------------
+  hookah-telegram-bot:
+    image: grape2000/hookah-telegram-bot
+    container_name: hookah_telegram_bot
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - BOT_TOKEN=1971644646:AAGvBtttDkD1H-3qdlHQNP-FhqeKTOJ04ZM
+      - SPRING_APPLICATION_NAME=hookah_telegram_bot
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/hookah
+      - SPRING_DATASOURCE_USERNAME=myusername
+      - SPRING_DATASOURCE_PASSWORD=mypassword
+    restart: always
+    depends_on:
+      - postgres
